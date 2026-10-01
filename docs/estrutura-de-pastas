@@ -1,0 +1,862 @@
+# Estrutura do Projeto — Plataforma de Gestão de Obras
+
+## 1. Objetivo
+
+Este documento define a estrutura física do projeto da Plataforma de Gestão de Obras.
+
+A organização seguirá a arquitetura **Monolítica Modular**, separando frontend, backend, banco de dados, documentação, infraestrutura e testes.
+
+O objetivo é manter o projeto organizado desde o início sem adicionar complexidade desnecessária.
+
+---
+
+# 2. Estrutura geral
+
+```text
+gestao-obras/
+│
+├── README.md
+├── .gitignore
+├── .env.example
+├── docker-compose.yml
+├── package.json
+│
+├── docs/
+│   ├── requisitos-funcionais.md
+│   ├── requisitos-nao-funcionais.md
+│   ├── regras-de-negocio.md
+│   ├── casos-de-uso.md
+│   ├── arquitetura.md
+│   ├── banco-de-dados.md
+│   ├── permissoes.md
+│   ├── api.md
+│   ├── stack-tecnologica.md
+│   ├── estrutura-do-projeto.md
+│   └── roadmap.md
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── middlewares/
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   ├── repositories/
+│   │   ├── modules/
+│   │   ├── database/
+│   │   ├── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   │
+│   ├── tests/
+│   ├── Dockerfile
+│   └── package.json
+│
+├── frontend/
+│   ├── assets/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   │
+│   ├── pages/
+│   ├── components/
+│   └── index.html
+│
+├── database/
+│   ├── migrations/
+│   └── seeds/
+│
+├── storage/
+│   └── .gitkeep
+│
+└── tests/
+    ├── integration/
+    └── e2e/
+```
+
+---
+
+# 3. Arquivos da raiz
+
+## README.md
+
+Apresentará o projeto de forma geral.
+
+Deverá conter:
+
+* objetivo;
+* funcionalidades;
+* tecnologias;
+* como executar;
+* estrutura;
+* documentação;
+* informações para desenvolvimento.
+
+---
+
+## .gitignore
+
+Define quais arquivos não deverão ser enviados para o GitHub.
+
+Exemplos:
+
+```text
+node_modules/
+.env
+*.log
+storage/*
+```
+
+Arquivos com informações sensíveis nunca deverão ser versionados.
+
+---
+
+## .env.example
+
+Apresentará as variáveis de ambiente necessárias para executar o projeto.
+
+Exemplo:
+
+```env
+PORT=3000
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=gestao_obras
+DB_USER=postgres
+DB_PASSWORD=
+
+JWT_SECRET=
+```
+
+O arquivo `.env` real ficará fora do Git.
+
+---
+
+## docker-compose.yml
+
+Será utilizado para levantar o ambiente de desenvolvimento.
+
+Inicialmente deverá conter:
+
+```text
+Backend
+PostgreSQL
+```
+
+Outros serviços somente serão adicionados quando houver necessidade real.
+
+---
+
+# 4. Pasta docs/
+
+Contém toda a documentação técnica e de negócio do projeto.
+
+```text
+docs/
+```
+
+Documentos atuais:
+
+```text
+requisitos-funcionais.md
+requisitos-nao-funcionais.md
+regras-de-negocio.md
+casos-de-uso.md
+arquitetura.md
+banco-de-dados.md
+permissoes.md
+api.md
+stack-tecnologica.md
+estrutura-do-projeto.md
+roadmap.md
+```
+
+A documentação deverá acompanhar a evolução do sistema.
+
+---
+
+# 5. Pasta backend/
+
+Contém toda a aplicação responsável pelo processamento do sistema.
+
+```text
+backend/
+```
+
+O backend será desenvolvido utilizando:
+
+```text
+Node.js
+Express.js
+PostgreSQL
+```
+
+---
+
+# 6. backend/src/
+
+Contém o código principal da aplicação.
+
+```text
+backend/src/
+```
+
+A divisão interna será baseada nas responsabilidades de cada parte.
+
+---
+
+# 7. config/
+
+Responsável pelas configurações da aplicação.
+
+```text
+backend/src/config/
+```
+
+Exemplos futuros:
+
+```text
+database.js
+auth.js
+environment.js
+```
+
+A configuração deverá utilizar variáveis de ambiente quando envolver informações sensíveis.
+
+---
+
+# 8. middlewares/
+
+Contém funções executadas durante o processamento das requisições.
+
+```text
+backend/src/middlewares/
+```
+
+Exemplos:
+
+```text
+authMiddleware.js
+permissionMiddleware.js
+errorMiddleware.js
+rateLimitMiddleware.js
+```
+
+Responsabilidades possíveis:
+
+* autenticação;
+* autorização;
+* tratamento de erros;
+* validações gerais;
+* controle de requisições.
+
+---
+
+# 9. routes/
+
+Define os endpoints da API.
+
+```text
+backend/src/routes/
+```
+
+Exemplo:
+
+```text
+auth.routes.js
+usuarios.routes.js
+clientes.routes.js
+obras.routes.js
+pedidos.routes.js
+financeiro.routes.js
+```
+
+As rotas não deverão conter regras complexas de negócio.
+
+---
+
+# 10. controllers/
+
+Responsável por receber as requisições e enviar as respostas.
+
+```text
+backend/src/controllers/
+```
+
+Exemplo:
+
+```text
+UsuarioController.js
+ClienteController.js
+ObraController.js
+PedidoController.js
+FinanceiroController.js
+```
+
+Fluxo:
+
+```text
+Request
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Response
+```
+
+---
+
+# 11. services/
+
+Responsável pelas regras de negócio.
+
+```text
+backend/src/services/
+```
+
+Exemplos:
+
+```text
+UsuarioService.js
+ClienteService.js
+ObraService.js
+PedidoService.js
+PagamentoService.js
+FinanceiroService.js
+```
+
+É uma das partes mais importantes da aplicação.
+
+Exemplo:
+
+```text
+Criar pedido
+    ↓
+Validar obra
+    ↓
+Validar cliente
+    ↓
+Validar itens
+    ↓
+Calcular total
+    ↓
+Salvar pedido
+```
+
+Essa lógica deverá ficar no Service, e não diretamente na rota.
+
+---
+
+# 12. repositories/
+
+Responsável pelo acesso ao PostgreSQL.
+
+```text
+backend/src/repositories/
+```
+
+Exemplos:
+
+```text
+UsuarioRepository.js
+ClienteRepository.js
+ObraRepository.js
+PedidoRepository.js
+FinanceiroRepository.js
+```
+
+Os Repositories serão responsáveis por executar consultas ao banco.
+
+Exemplo conceitual:
+
+```text
+Service
+   ↓
+Repository
+   ↓
+SQL
+   ↓
+PostgreSQL
+```
+
+---
+
+# 13. modules/
+
+A pasta `modules/` será utilizada para organizar funcionalidades maiores do sistema.
+
+```text
+backend/src/modules/
+```
+
+Cada módulo poderá possuir seus próprios componentes quando a aplicação crescer.
+
+Exemplo:
+
+```text
+modules/
+├── auth/
+├── usuarios/
+├── clientes/
+├── obras/
+├── pedidos/
+├── financeiro/
+├── atividades/
+├── materiais/
+├── alugueis/
+└── documentos/
+```
+
+A utilização poderá evoluir conforme o projeto crescer.
+
+O objetivo é evitar que uma única pasta fique com centenas de arquivos.
+
+---
+
+# 14. database/
+
+Responsável pelo código relacionado ao banco dentro do backend.
+
+```text
+backend/src/database/
+```
+
+Pode conter:
+
+```text
+connection.js
+```
+
+e futuramente outros arquivos relacionados à inicialização ou manutenção da conexão.
+
+As migrations ficarão na pasta raiz `database/migrations`.
+
+---
+
+# 15. utils/
+
+Contém funções auxiliares reutilizáveis.
+
+```text
+backend/src/utils/
+```
+
+Exemplos:
+
+```text
+formatDate.js
+formatCurrency.js
+generateId.js
+```
+
+Essas funções não deverão conter regras específicas de um módulo.
+
+---
+
+# 16. app.js
+
+Responsável pela configuração da aplicação Express.
+
+Exemplo de responsabilidades:
+
+```text
+Criar aplicação Express
+↓
+Configurar JSON
+↓
+Configurar middlewares
+↓
+Registrar rotas
+↓
+Configurar tratamento de erros
+```
+
+O `app.js` não deverá iniciar diretamente o servidor.
+
+---
+
+# 17. server.js
+
+Responsável por iniciar o servidor.
+
+Fluxo:
+
+```text
+server.js
+    ↓
+app.js
+    ↓
+Express
+    ↓
+Servidor HTTP
+```
+
+Essa separação facilita testes automatizados da aplicação.
+
+---
+
+# 18. backend/tests/
+
+Contém testes específicos do backend.
+
+```text
+backend/tests/
+```
+
+Poderá conter:
+
+```text
+unit/
+integration/
+```
+
+### Testes unitários
+
+Testam partes isoladas da aplicação.
+
+### Testes de integração
+
+Verificam a comunicação entre componentes, como API e banco.
+
+---
+
+# 19. frontend/
+
+Contém a interface utilizada pelos usuários.
+
+```text
+frontend/
+```
+
+Tecnologias iniciais:
+
+```text
+HTML5
+CSS3
+JavaScript
+```
+
+Não será utilizado React inicialmente.
+
+O objetivo é aprender os fundamentos:
+
+* DOM;
+* eventos;
+* formulários;
+* Fetch API;
+* HTTP;
+* JSON;
+* autenticação;
+* manipulação de estado;
+* comunicação com a API.
+
+---
+
+# 20. frontend/assets/
+
+Arquivos estáticos do frontend.
+
+```text
+assets/
+├── css/
+├── js/
+└── images/
+```
+
+### css/
+
+Arquivos de estilos.
+
+### js/
+
+Scripts do frontend.
+
+### images/
+
+Imagens utilizadas pela interface.
+
+---
+
+# 21. frontend/pages/
+
+Páginas da aplicação.
+
+Exemplos:
+
+```text
+login.html
+dashboard.html
+clientes.html
+obras.html
+pedidos.html
+financeiro.html
+perfil.html
+```
+
+O número de páginas poderá aumentar conforme novas funcionalidades forem implementadas.
+
+---
+
+# 22. frontend/components/
+
+Componentes reutilizáveis da interface.
+
+Exemplos:
+
+```text
+navbar
+sidebar
+modal
+tabela
+card
+formulario
+```
+
+Inicialmente serão componentes simples utilizando HTML, CSS e JavaScript.
+
+---
+
+# 23. database/
+
+Contém arquivos relacionados à estrutura e população do banco.
+
+```text
+database/
+├── migrations/
+└── seeds/
+```
+
+---
+
+## migrations/
+
+As migrations controlarão a evolução do banco.
+
+Exemplo:
+
+```text
+001_create_empresas.sql
+002_create_usuarios.sql
+003_create_clientes.sql
+004_create_obras.sql
+005_create_pedidos.sql
+```
+
+Cada alteração estrutural importante deverá possuir uma migration.
+
+---
+
+## seeds/
+
+Utilizada para inserir dados iniciais ou de desenvolvimento.
+
+Exemplo:
+
+```text
+001_admin.sql
+002_dados_teste.sql
+```
+
+Dados reais da empresa não deverão ser colocados diretamente no código do projeto.
+
+---
+
+# 24. storage/
+
+Local destinado inicialmente aos arquivos enviados pelo sistema.
+
+Exemplo:
+
+```text
+storage/
+├── documentos/
+├── comprovantes/
+└── temporarios/
+```
+
+No ambiente de produção, o armazenamento poderá ser substituído por um serviço externo.
+
+O banco deverá armazenar os metadados e a referência do arquivo, e não necessariamente o arquivo binário.
+
+---
+
+# 25. tests/
+
+Testes gerais do projeto.
+
+```text
+tests/
+├── integration/
+└── e2e/
+```
+
+### Integration
+
+Testes envolvendo diferentes partes do sistema.
+
+### E2E
+
+Testes que simulam a utilização da plataforma do ponto de vista do usuário.
+
+Exemplo:
+
+```text
+Login
+ ↓
+Acessar obra
+ ↓
+Criar pedido
+ ↓
+Adicionar itens
+ ↓
+Enviar pedido
+```
+
+---
+
+# 26. Fluxo de uma requisição
+
+Uma requisição comum seguirá aproximadamente este fluxo:
+
+```text
+Frontend
+   ↓
+HTTP Request
+   ↓
+Route
+   ↓
+Middleware de autenticação
+   ↓
+Middleware de permissão
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+PostgreSQL
+   ↓
+Repository
+   ↓
+Service
+   ↓
+Controller
+   ↓
+HTTP Response
+   ↓
+Frontend
+```
+
+---
+
+# 27. Exemplo prático
+
+Quando o administrador criar uma obra:
+
+```text
+POST /api/v1/obras
+```
+
+O processo será:
+
+```text
+1. Frontend envia os dados
+          ↓
+2. Route recebe a requisição
+          ↓
+3. Middleware verifica autenticação
+          ↓
+4. Middleware verifica permissão
+          ↓
+5. Controller recebe os dados
+          ↓
+6. Service valida as regras de negócio
+          ↓
+7. Repository executa o SQL
+          ↓
+8. PostgreSQL salva a obra
+          ↓
+9. Repository retorna o resultado
+          ↓
+10. Service processa o resultado
+          ↓
+11. Controller envia resposta
+          ↓
+12. Frontend atualiza a interface
+```
+
+---
+
+# 28. Princípio de organização
+
+Cada parte do sistema deverá possuir uma responsabilidade clara.
+
+```text
+Route       → Onde?
+Controller  → Recebe e responde
+Service     → O que pode ou não pode?
+Repository  → Como acessar o banco?
+Database    → Onde os dados ficam?
+Frontend    → Como o usuário interage?
+```
+
+Esse princípio evita concentrar toda a lógica em um único arquivo.
+
+---
+
+# 29. Crescimento futuro
+
+A estrutura inicial deverá permitir evolução sem necessidade de reescrever todo o projeto.
+
+Possíveis evoluções:
+
+```text
+Hoje
+Frontend + Backend + PostgreSQL
+             ↓
+       Monólito Modular
+             ↓
+        Crescimento
+             ↓
+Cache / Worker / Filas
+             ↓
+      Maior escala
+             ↓
+Separação de serviços se necessário
+```
+
+Não serão adicionados serviços apenas por antecipação.
+
+---
+
+# 30. Regra principal
+
+A organização do projeto deverá seguir o princípio:
+
+> **Cada responsabilidade no seu lugar.**
+
+E também:
+
+> **Começar simples, mas não começar desorganizado.**
+
+A estrutura poderá ser alterada durante o desenvolvimento quando existir uma necessidade real, desde que a mudança seja documentada.
+
+---
+
+## Próxima etapa
+
+Com a estrutura definida, o próximo passo será preparar o **ambiente de desenvolvimento**:
+
+1. Criar o projeto Node.js;
+2. Configurar o `package.json`;
+3. Instalar Express;
+4. Configurar PostgreSQL;
+5. Configurar variáveis de ambiente;
+6. Criar o primeiro servidor;
+7. Criar a primeira rota;
+8. Preparar o Dockerfile;
+9. Criar o `docker-compose.yml`;
+10. Executar o primeiro teste da API.
