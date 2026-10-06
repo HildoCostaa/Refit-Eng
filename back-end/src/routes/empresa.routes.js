@@ -1,34 +1,82 @@
 
 // Importa o Router do Express.
-//
-// O Router permite criar um conjunto de rotas
-// separado do arquivo principal da aplicação.
 import { Router } from "express";
 
-// Importa a função "criar" do Controller.
-//
-// Essa função será executada quando alguém
-// fizer uma requisição POST para a rota definida abaixo.
-import { criar } from "../controllers/empresa.controller.js";
+
+// Importa as funções do Controller.
+import {
+    criar,
+    listar,
+    buscarPorId,
+    atualizar,
+    excluir
+} from "../controllers/empresa.controller.js";
 
 
-// Cria uma nova instância do Router.
+// Cria o Router.
 const router = Router();
 
 
 // ============================================================
-// ROTA: CRIAR EMPRESA
+// CRIAR EMPRESA
 // ============================================================
 
-// Quando alguém fizer:
-//
-// POST /empresas
-//
-// o Express executará a função "criar"
-// que veio do Controller.
+// POST /api/v1/empresas
 router.post("/", criar);
 
 
-// Exporta o Router para que ele possa
-// ser utilizado pelo app.js.
+// ============================================================
+// LISTAR EMPRESAS
+// ============================================================
+
+// GET /api/v1/empresas
+router.get("/", listar);
+
+
+// ============================================================
+// BUSCAR EMPRESA POR ID
+// ============================================================
+
+// GET /api/v1/empresas/:id
+//
+// O :id é um parâmetro dinâmico.
+//
+// Exemplos:
+//
+// /empresas/1
+// /empresas/2
+// /empresas/15
+router.get("/:id", buscarPorId);
+
+
+// ============================================================
+// ATUALIZAR EMPRESA
+// ============================================================
+
+// PUT /api/v1/empresas/:id
+//
+// Exemplo:
+//
+// PUT /api/v1/empresas/1
+//
+// Nesse caso, a empresa de ID 1 será atualizada.
+router.put("/:id", atualizar);
+
+
+// ============================================================
+// EXCLUIR EMPRESA
+// ============================================================
+
+// DELETE /api/v1/empresas/:id
+//
+// Exemplo:
+//
+// DELETE /api/v1/empresas/1
+//
+// Nesse caso, a empresa de ID 1 será excluída.
+router.delete("/:id", excluir);
+
+
+// Exporta o Router.
 export default router;
+
