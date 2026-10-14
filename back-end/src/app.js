@@ -5,6 +5,11 @@ import express from "express";
 // Importa as rotas relacionadas às empresas.
 import empresaRoutes from "./routes/empresa.routes.js";
 
+// Importa as rotas relacionadas à autenticação.
+import authRoutes from "./routes/auth.routes.js";
+
+// Importa as rotas relacionadas aos usuários.
+import usuarioRoutes from "./routes/usuario.routes.js";
 
 // Cria a aplicação Express.
 const app = express();
@@ -21,7 +26,14 @@ const app = express();
 // quando enviarmos dados para cadastrar uma empresa.
 app.use(express.json());
 
+// ============================================================
+// ROTAS DE AUTENTICAÇÃO
+// ============================================================
+app.use("/api/v1/auth", authRoutes);
 
+// ============================================================
+// ROTAS DE USUÁRIOS
+app.use("/api/v1/usuarios", usuarioRoutes);
 // ============================================================
 // HEALTH CHECK
 // ============================================================
