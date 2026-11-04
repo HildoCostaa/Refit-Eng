@@ -34,7 +34,10 @@ async function autenticar(req, res, next) {
         // Verifica a assinatura e a validade do token.
         const dadosToken = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
+            {
+                algorithms: ["HS256"]
+            }
         );
 
         // Busca os dados atuais do usuário no banco.
@@ -114,7 +117,35 @@ function exigirPerfil(...perfisPermitidos) {
     };
 }
 
+
+/**
+ * EXIGIR VÍNCULO COM UMA EMPRESA
+ *
+ * Deve ser usado depois do middleware autenticar.
+ * Obtém a empresa exclusivamente do usuário autenticado.
+ */
+function exigirEmpresa(req, res, next) {
+    if (!req.usuario) {
+        return res.status(401).json({
+            erro: "Autenticação necessária."
+        });
+    }
+
+    if (!req.usuario.empresa_id) {
+        return res.status(403).json({
+            erro: "Este usuário não está vinculado a uma empresa."
+        });
+    }
+
+    // Define a empresa confiável para a requisição.
+    req.empresaId = req.usuario.empresa_id;
+
+    next();
+}
+
+
 export {
     autenticar,
-    exigirPerfil
+    exigirPerfil,
+    exigirEmpresa
 };

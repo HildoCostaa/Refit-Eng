@@ -1,24 +1,22 @@
-// Importa a aplicação Express que foi configurada no arquivo app.js.
 import app from "./app.js";
 
+// Verifica se a chave JWT está configurada
+// e possui pelo menos 32 bytes.
+if (
+    !process.env.JWT_SECRET ||
+    Buffer.byteLength(process.env.JWT_SECRET, "utf8") < 32
+) {
+    console.error(
+        "Erro: JWT_SECRET não configurada ou possui menos de 32 bytes."
+    );
 
-// Define a porta onde o servidor será executado.
-//
-// Primeiro, o código procura uma variável PORT no arquivo .env.
-//
-// Caso PORT não exista, utiliza a porta 3000 como padrão.
+    process.exit(1);
+}
+
+// Define a porta do servidor
 const PORT = process.env.PORT || 3000;
 
-
-// Inicia o servidor.
-//
-// O método listen() faz o Node.js começar a "escutar"
-// requisições HTTP nessa porta.
+// Inicia a aplicação
 app.listen(PORT, () => {
-
-    // Exibe no terminal uma mensagem informando
-    // que o servidor foi iniciado com sucesso.
     console.log(`Servidor iniciado em http://localhost:${PORT}`);
-
 });
-

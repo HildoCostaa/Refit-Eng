@@ -3,18 +3,23 @@ import express from "express";
 
 import {
     criarAdministradorEmpresa,
-    criarColaborador
+    criarColaborador,
+    listar,
+    buscarPorId,
+    atualizar,
+    desativar
 } from "../controllers/usuario.controller.js";
 
 import {
     autenticar,
-    exigirPerfil
+    exigirPerfil,
+    exigirEmpresa
 } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// Somente o administrador geral cria o primeiro administrador
-// de uma empresa já cadastrada.
+// CRIAR ADMINISTRADOR DE UMA EMPRESA
+// Somente o ADMIN_GERAL pode executar.
 router.post(
     "/empresas/:empresaId/administrador",
     autenticar,
@@ -22,13 +27,43 @@ router.post(
     criarAdministradorEmpresa
 );
 
-// Somente o administrador da empresa cria colaboradores.
-// O empresa_id é obtido a partir do usuário autenticado.
-router.post(
+// TODAS AS ROTAS DE GESTÃO DE COLABORADORES
+// Exigem administrador autenticado e vinculado a uma empresa.
+router.use(
     "/empresa/colaboradores",
     autenticar,
     exigirPerfil("ADMIN_EMPRESA"),
+    exigirEmpresa
+);
+
+// CRIAR COLABORADOR
+router.post(
+    "/empresa/colaboradores",
     criarColaborador
+);
+
+// LISTAR COLABORADORES
+router.get(
+    "/empresa/colaboradores",
+    listar
+);
+
+// CONSULTAR COLABORADOR POR ID
+router.get(
+    "/empresa/colaboradores/:id",
+    buscarPorId
+);
+
+// EDITAR COLABORADOR
+router.put(
+    "/empresa/colaboradores/:id",
+    atualizar
+);
+
+// DESATIVAR COLABORADOR
+router.patch(
+    "/empresa/colaboradores/:id/desativar",
+    desativar
 );
 
 export default router;

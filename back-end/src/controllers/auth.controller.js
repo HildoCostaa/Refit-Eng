@@ -75,7 +75,8 @@ async function login(req, res) {
             process.env.JWT_SECRET,
             {
                 subject: String(usuario.id),
-                expiresIn: "1h"
+                expiresIn: "1h",
+                algorithm: "HS256"
             }
         );
 
