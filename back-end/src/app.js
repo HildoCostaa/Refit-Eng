@@ -11,6 +11,13 @@ import authRoutes from "./routes/auth.routes.js";
 // Importa as rotas relacionadas aos usuários.
 import usuarioRoutes from "./routes/usuario.routes.js";
 
+// Importa as rotas relacionadas aos clientes.
+import clienteRoutes from "./routes/cliente.routes.js";
+
+import orcamentoColaboradorRoutes from "./routes/orcamento-colaborador.routes.js";
+
+import orcamentoRoutes from "./routes/orcamento.routes.js";
+
 // Cria a aplicação Express.
 const app = express();
 
@@ -67,6 +74,13 @@ app.get("/api/v1/health", (req, res) => {
 // POST /api/v1/empresas
 app.use("/api/v1/empresas", empresaRoutes);
 
+app.use("/api/v1/clientes", clienteRoutes);
 
+app.use(
+    "/api/v1/orcamentos",
+    orcamentoColaboradorRoutes
+);
+
+app.use("/api/v1/orcamentos", orcamentoRoutes);
 // Exporta a aplicação.
 export default app;
